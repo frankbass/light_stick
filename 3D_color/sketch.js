@@ -46,6 +46,7 @@ function keys() {
     if (keyCode == 101) {
       locZ += 1;
     }
+    //rotation in radians (theta), take sine, +1, * 127 
     red = nf((sin(xRot) + 1) * 127, 3, 0);
     green = nf((sin(yRot) + 1) * 127, 3, 0);
     blue = nf((sin(zRot) + 1) * 127, 3, 0);

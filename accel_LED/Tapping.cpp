@@ -1,12 +1,23 @@
-/*int mode = 0;
-int lastTapped = 0; //ms since last tap
+/*
+  Tapping.cpp - designed to detect single and double taps on the accelerometer.
+  It shifts through modes for light behaviour: angle = RGB or flashing or brightness
+  March 21, 2020
+*/
 
-void tapping() {
-  int timeDiff = millis() - lastTapped;
+#include "Arduino.h"
+#include "Tapping.h"
+
+Tapping::Tapping()
+{
+  _mode = 0;
+  _lastTapped = 0;
+}
+void Tapping::tapping(uint8_t c) {
+  int timeDiff = millis() - _lastTapped;
   short tapped;
   if (timeDiff > 100) {
-    lastTapped = millis();
-    uint8_t click = lis.getClick();
+    _lastTapped = millis();
+    uint8_t click = c;
     if (click == 0) return;
     if (! (click & 0x30)) return;
     //  Serial.print("Click detected (0x"); Serial.print(click, HEX); Serial.print("): ");
@@ -29,14 +40,12 @@ void tapping() {
 
     mode += 4;
     mode = mode % 4;
-    
+
     Serial.println();
     Serial.print("mode: "); Serial.println(mode);
     Serial.print("time: "); Serial.println(timeDiff);
     Serial.print("click: "); Serial.println(click);
     Serial.println();
-
     return;
   }
 }
-*/
