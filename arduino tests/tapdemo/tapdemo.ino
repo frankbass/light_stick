@@ -24,23 +24,25 @@ Adafruit_LIS3DH lis = Adafruit_LIS3DH();
 // for 8G, try 10-20. for 4G try 20-40. for 2G try 40-80
 #define CLICKTHRESHHOLD 100
 
+int count = 0;
+
 void setup(void) {
 #ifndef ESP8266
   while (!Serial) yield();     // will pause Zero, Leonardo, etc until serial console opens
 #endif
 
   Serial.begin(9600);
-    Serial.println("Adafruit LIS3DH Tap Test!");
-  
+  Serial.println("Adafruit LIS3DH Tap Test!");
+
   if (! lis.begin(0x18)) {   // change this to 0x19 for alternative i2c address
     Serial.println("Couldnt start");
     while (1) yield();
   }
   Serial.println("LIS3DH found!");
-  
+
   lis.setRange(LIS3DH_RANGE_2_G);   // 2, 4, 8 or 16 G!
-  
-  Serial.print("Range = "); Serial.print(2 << lis.getRange());  
+
+  Serial.print("Range = "); Serial.print(2 << lis.getRange());
   Serial.println("G");
 
   // 0 = turn off click detection & interrupt
@@ -48,7 +50,7 @@ void setup(void) {
   // 2 = double click only interrupt output, detect single click
   // Adjust threshhold, higher numbers are less sensitive
   lis.setClick(2, CLICKTHRESHHOLD);
-  delay(100);
+  delay(80);
 }
 
 
@@ -56,10 +58,20 @@ void loop() {
   uint8_t click = lis.getClick();
   if (click == 0) return;
   if (! (click & 0x30)) return;
-  Serial.print("Click detected (0x"); Serial.print(click, HEX); Serial.print("): ");
-  if (click & 0x10) Serial.print(" single click");
-  if (click & 0x20) Serial.print(" double click");
+  //  Serial.print("Click detected (0x"); Serial.print(click, HEX); Serial.print("): ");
+  if (click & 0x10) {
+    Serial.print(" single click");
+    count ++;
+  };
+  if (click & 0x20) {
+    Serial.print(" double click");
+    count -= 2;
+  };
   Serial.println();
+  Serial.println(count);
+//  Serial.print("click: "); Serial.print(click);
+  Serial.println();
+  
 
   delay(100);
   return;
